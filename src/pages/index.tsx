@@ -17,6 +17,17 @@ export default function Home() {
         <Markers storeDatas={storeDatas} map={map} setCurrentStore={setCurrentStore} />
         <StoreBox store={currentStore} setStore={setCurrentStore}/>
       </>
-
   );
+}
+
+// getStaticProps 데이터 가져오기
+export async function getStaticProps(){
+    const stores = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stores`
+    ).then((res) => res.json()); // /api/stores 겟 요청
+
+    return {
+        props: {stores},
+        revalidate:60 * 60,
+    }
 }
