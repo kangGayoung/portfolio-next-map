@@ -28,10 +28,11 @@ export default function StoreBox({store, setStore}: StoreBoxProps){
                                 <div className="font-semibold">{store?.upso_nm}</div>
                                 <div className="text-sm">{store?.cob_code_nm}</div>
                             </div>
-                            <button type="button" onClick={()=> setStore(null)}>
-                                <AiOutlineClose />
-                            </button>
                         </div>
+                        <button type="button" onClick={()=> setStore(null)}>
+                            <AiOutlineClose />
+                        </button>
+                    </div>
                         <div className="mt-4 flex gap-2 items-center">
                             <HiOutlineMapPin />
                             {store?.rdn_code_nm}
@@ -42,14 +43,14 @@ export default function StoreBox({store, setStore}: StoreBoxProps){
                         </div>
                         <div className="mt-2 flex gap-2 items-center">
                             <AiOutlineInfoCircle />
-                            {store?.crtc_gbn_nm}
+                            {store?.crtfc_gbn_nm}
                         </div>
                         <div className="mt-2 flex gap-2 items-center">
                             <AiOutlineCheck />
                             {store?.bizcnd_code_nm}
                         </div>
                     </div>
-                </div>
+
                 <button type="button" onClick={() => window.alert("상세보기 작업 중")}
                     className="w-full bg-blue-700 hover:bg-blue-500 focus:bg-blue-500 py-3 text-white font-semibold rounded-b-lg"
                 >

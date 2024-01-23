@@ -9,13 +9,14 @@ interface MarkerProps{
 
 export default function Markers({map,storeDatas,setCurrentStore}: MarkerProps){
     const loadKakaoMarkers = useCallback(() => {
+        if(map){
         //식당 데이터 마커 띄우기
         //stores?.["DATA"]?.map((store) => {
         storeDatas?.map((store) => {
             // 마커이미지의 주소입니다
             var imageSrc = store?.bizcnd_code_nm
                     ? `/images/markers/${store?.bizcnd_code_nm}.png`
-                    : `/images/markers/default.png`,
+                    : "/images/markers/default.png",
                 imageSize = new window.kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
                 imageOption = {offset: new window.kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
@@ -61,7 +62,8 @@ export default function Markers({map,storeDatas,setCurrentStore}: MarkerProps){
             window.kakao.maps.event.addListener(marker, "click", function (){
                 setCurrentStore(store);
             })
-        })
+            })
+        }
     },[map, setCurrentStore, storeDatas]);
 
     useEffect(() => {
