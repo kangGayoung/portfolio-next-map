@@ -1,21 +1,27 @@
 import Image from "next/image";
-import { StoreType } from "@/interface";
+import { StoreApiResponse, StoreType } from "@/interface";
 
 import { useQuery } from "react-query";
 
 import axios from "axios";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 // export default function StoreListPage({ stores }: { stores: StoreType[] }) {
 export default function StoreListPage() {
+    const router = useRouter(); //페이지네이션
+    const { page = "1" }: any = router.query; //페이지 시작값
     const {
         isLoading,
         isError,
         data: stores, //data: stores 데이터 이름 지정 가능
-    } = useQuery("stores", async () => {
-        const { data } = await axios("/api/stores");
-        return data as StoreType[];
+    } = useQuery(`stores-${page}`, async () => {
+        const { data } = await axios(`/api/stores?page=${page}`);
+        return data as StoreApiResponse;
     });
+
+    console.log(stores);
 
     if (isError) {
         return (
@@ -31,7 +37,7 @@ export default function StoreListPage() {
                 {isLoading ? (
                     <Loading />
                 ) : (
-                    stores?.map((store, index) => (
+                    stores?.data?.map((store, index) => (
                         <li
                             className="flex justify-between gap-x-6 py-5"
                             key={index}
@@ -69,6 +75,60 @@ export default function StoreListPage() {
                     ))
                 )}
             </ul>
+            {stores?.totalPage && (
+                <div className="py-6 w-full px-10 flex justify-center gap-3 ba-white my-10 flex-wrap text-black">
+                    {stores?.totalPage <= 10 ? (
+                        [...Array(stores?.totalPage)].map((x, i) => (
+                            <Link
+                                href={{
+                                    pathname: "/stores",
+                                    query: { page: i + 1 },
+                                }}
+                                key={i}
+                            >
+                                <span
+                                    className={`px-3 py-2 rounded border shadow-sm ba-white ${
+                                        i + 1 === parseInt(page, 10)
+                                            ? "text-blue-600 font-bold"
+                                            : "text-gray-300"
+                                    }`}
+                                >
+                                    {i + 1}
+                                </span>
+                            </Link>
+                        ))
+                    ) : (
+                        <>
+                            <Link
+                                href={{
+                                    pathname: "/stores",
+                                    query: { page: page - 1 },
+                                }}
+                            >
+                                <span
+                                    className={`px-3 py-2 rounded border shadow-sm ba-white 
+                                    `}
+                                >
+                                    이전
+                                </span>
+                            </Link>
+                            <Link
+                                href={{
+                                    pathname: "/stores",
+                                    query: { page: page + 1 },
+                                }}
+                            >
+                                <span
+                                    className={`px-3 py-2 rounded border shadow-sm ba-white 
+                                    `}
+                                >
+                                    다음
+                                </span>
+                            </Link>
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
