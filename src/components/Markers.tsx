@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+import { StoreType } from "@/interface";
 
 interface MarkerProps {
     map: any;
-    stores: any[];
+    stores: StoreType[];
     setCurrentStore: Dispatch<SetStateAction<any>>;
 }
 
@@ -13,8 +14,8 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
             //stores?.["DATA"]?.map((store) => {
             stores?.map((store) => {
                 // 마커이미지의 주소입니다
-                var imageSrc = store?.bizcnd_code_nm
-                        ? `/images/markers/${store?.bizcnd_code_nm}.png`
+                var imageSrc = store?.category
+                        ? `/images/markers/${store?.category}.png`
                         : `/images/markers/default.png`,
                     imageSize = new window.kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
                     imageOption = {
@@ -29,8 +30,8 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
                 );
                 // 마커가 표시될 위치입니다
                 var markerPosition = new window.kakao.maps.LatLng(
-                    store?.y_dnts,
-                    store?.x_cnts,
+                    store?.lat,
+                    store?.lng,
                 );
 
                 // 마커를 생성합니다
@@ -43,7 +44,7 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
                 marker.setMap(map);
 
                 // 마커 커서가 오버되었을 때 마커 위에 표시 할 인포 윈도우 생성
-                var content = `<div class="infowindow">${store?.upso_nm}</div>`; //인포 윈도우에 표시
+                var content = `<div class="infowindow">${store?.name}</div>`; //인포 윈도우에 표시
                 // 될 내용
 
                 // 커스텀 오버레이를 생성합니다
@@ -57,7 +58,7 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
                 // 마커에 마우스오버 이벤트를 등록합니다
                 window.kakao.maps.event.addListener(
                     marker,
-                    'mouseover',
+                    "mouseover",
                     function () {
                         // 마커에 마우스오버 이벤트가 발생하면 커스텀 오버레이를 마커위에 표시합니다
                         customOverlay.setMap(map);
@@ -67,7 +68,7 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
                 // 마커에 마우스아웃 이벤트를 등록합니다
                 window.kakao.maps.event.addListener(
                     marker,
-                    'mouseout',
+                    "mouseout",
                     function () {
                         // 마커에 마우스아웃 이벤트가 발생하면 커스텀 오버레이를 제거합니다
                         customOverlay.setMap(null);
@@ -77,7 +78,7 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
                 // 선택한 가게 저장
                 window.kakao.maps.event.addListener(
                     marker,
-                    'click',
+                    "click",
                     function () {
                         setCurrentStore(store);
                     },

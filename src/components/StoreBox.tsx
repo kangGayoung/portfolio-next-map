@@ -7,9 +7,10 @@ import {
     AiOutlinePhone,
 } from "react-icons/ai";
 import { HiOutlineMapPin } from "react-icons/hi2";
+import { StoreType } from "@/interface";
 
 interface StoreBoxProps {
-    store: any;
+    store: StoreType;
     setStore: Dispatch<SetStateAction<any>>;
 }
 
@@ -23,8 +24,8 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
                             <div className="flex gap-4 items-center">
                                 <Image
                                     src={
-                                        store?.bizcnd_code_nm
-                                            ? `/images/markers/${store?.bizcnd_code_nm}.png`
+                                        store?.category
+                                            ? `/images/markers/${store?.category}.png`
                                             : "/images/markers/default.png"
                                     }
                                     width={40}
@@ -33,10 +34,10 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
                                 />
                                 <div>
                                     <div className="font-semibold">
-                                        {store?.upso_nm}
+                                        {store?.name}
                                     </div>
                                     <div className="text-sm">
-                                        {store?.cob_code_nm}
+                                        {store?.storeType}
                                     </div>
                                 </div>
                             </div>
@@ -49,19 +50,19 @@ export default function StoreBox({ store, setStore }: StoreBoxProps) {
                         </div>
                         <div className="mt-4 flex gap-2 items-center">
                             <HiOutlineMapPin />
-                            {store?.rdn_code_nm}
+                            {store?.address}
                         </div>
                         <div className="mt-2 flex gap-2 items-center">
                             <AiOutlinePhone />
-                            {store?.tel_no}
+                            {store?.phone}
                         </div>
                         <div className="mt-2 flex gap-2 items-center">
                             <AiOutlineInfoCircle />
-                            {store?.crtfc_gbn_nm}
+                            {store?.storeType}
                         </div>
                         <div className="mt-2 flex gap-2 items-center">
                             <AiOutlineCheck />
-                            {store?.bizcnd_code_nm}
+                            {store?.category}
                         </div>
                     </div>
                     <button
