@@ -1,33 +1,35 @@
-import Link from "next/link";
-import Layout from "@/components/Layout";
-import {useState} from "react";
-import Map from "@/components/Map";
-import Markers from "@/components/Markers";
+import { useState } from 'react';
+import Map from '@/components/Map';
+import Markers from '@/components/Markers';
 
-import * as stores from "@/data/store_data.json";
-import StoreBox from "@/components/StoreBox";
+import StoreBox from '@/components/StoreBox';
+import { StoreType } from '@/interface';
 
-export default function Home() {
+export default function Home({ stores }: { stores: StoreType[] }) {
     const [map, setMap] = useState(null);
     const [currentStore, setCurrentStore] = useState(null);
-    const storeDatas = stores["DATA"];
-  return (
-      <>
-        <Map setMap={setMap}/>
-        <Markers storeDatas={storeDatas} map={map} setCurrentStore={setCurrentStore} />
-        <StoreBox store={currentStore} setStore={setCurrentStore}/>
-      </>
-  );
+    //const storeDatas = stores['DATA'];
+    return (
+        <>
+            <Map setMap={setMap} />
+            {/*Markers 에 stores 데이터 전달*/}
+            <Markers
+                stores={stores}
+                map={map}
+                setCurrentStore={setCurrentStore}
+            />
+            <StoreBox store={currentStore} setStore={setCurrentStore} />
+        </>
+    );
 }
 
-// getStaticProps 데이터 가져오기
-export async function getStaticProps(){
+export async function getStaticProps() {
+    // api/stores get 요청
     const stores = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/stores`
-    ).then((res) => res.json()); // /api/stores 겟 요청
-
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stores`,
+    ).then((res) => res.json()); // respose를 json으로 변경
     return {
-        props: {stores},
-        revalidate:60 * 60,
-    }
+        props: { stores },
+        revalidate: 60 * 60, //한시간마다
+    };
 }
