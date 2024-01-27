@@ -2,20 +2,16 @@ import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
 
 interface MarkerProps {
     map: any;
-    storeDatas: any[];
+    stores: any[];
     setCurrentStore: Dispatch<SetStateAction<any>>;
 }
 
-export default function Markers({
-    map,
-    storeDatas,
-    setCurrentStore,
-}: MarkerProps) {
+export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
     const loadKakaoMarkers = useCallback(() => {
         if (map) {
             //식당 데이터 마커 띄우기
             //stores?.["DATA"]?.map((store) => {
-            storeDatas?.map((store) => {
+            stores?.map((store) => {
                 // 마커이미지의 주소입니다
                 var imageSrc = store?.bizcnd_code_nm
                         ? `/images/markers/${store?.bizcnd_code_nm}.png`
@@ -29,12 +25,12 @@ export default function Markers({
                 var markerImage = new window.kakao.maps.MarkerImage(
                     imageSrc,
                     imageSize,
-                    imageOption
+                    imageOption,
                 );
                 // 마커가 표시될 위치입니다
                 var markerPosition = new window.kakao.maps.LatLng(
                     store?.y_dnts,
-                    store?.x_cnts
+                    store?.x_cnts,
                 );
 
                 // 마커를 생성합니다
@@ -65,7 +61,7 @@ export default function Markers({
                     function () {
                         // 마커에 마우스오버 이벤트가 발생하면 커스텀 오버레이를 마커위에 표시합니다
                         customOverlay.setMap(map);
-                    }
+                    },
                 );
 
                 // 마커에 마우스아웃 이벤트를 등록합니다
@@ -75,7 +71,7 @@ export default function Markers({
                     function () {
                         // 마커에 마우스아웃 이벤트가 발생하면 커스텀 오버레이를 제거합니다
                         customOverlay.setMap(null);
-                    }
+                    },
                 );
 
                 // 선택한 가게 저장
@@ -84,11 +80,11 @@ export default function Markers({
                     'click',
                     function () {
                         setCurrentStore(store);
-                    }
+                    },
                 );
             });
         }
-    }, [map, setCurrentStore, storeDatas]);
+    }, [map, setCurrentStore, stores]);
 
     useEffect(() => {
         loadKakaoMarkers();
