@@ -7,6 +7,7 @@ import axios from "axios";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Pagination from "@/components/Pagination";
 
 // export default function StoreListPage({ stores }: { stores: StoreType[] }) {
 export default function StoreListPage() {
@@ -76,58 +77,7 @@ export default function StoreListPage() {
                 )}
             </ul>
             {stores?.totalPage && (
-                <div className="py-6 w-full px-10 flex justify-center gap-3 ba-white my-10 flex-wrap text-black">
-                    {stores?.totalPage <= 10 ? (
-                        [...Array(stores?.totalPage)].map((x, i) => (
-                            <Link
-                                href={{
-                                    pathname: "/stores",
-                                    query: { page: i + 1 },
-                                }}
-                                key={i}
-                            >
-                                <span
-                                    className={`px-3 py-2 rounded border shadow-sm ba-white ${
-                                        i + 1 === parseInt(page, 10)
-                                            ? "text-blue-600 font-bold"
-                                            : "text-gray-300"
-                                    }`}
-                                >
-                                    {i + 1}
-                                </span>
-                            </Link>
-                        ))
-                    ) : (
-                        <>
-                            <Link
-                                href={{
-                                    pathname: "/stores",
-                                    query: { page: page - 1 },
-                                }}
-                            >
-                                <span
-                                    className={`px-3 py-2 rounded border shadow-sm ba-white 
-                                    `}
-                                >
-                                    이전
-                                </span>
-                            </Link>
-                            <Link
-                                href={{
-                                    pathname: "/stores",
-                                    query: { page: page + 1 },
-                                }}
-                            >
-                                <span
-                                    className={`px-3 py-2 rounded border shadow-sm ba-white 
-                                    `}
-                                >
-                                    다음
-                                </span>
-                            </Link>
-                        </>
-                    )}
-                </div>
+                <Pagination total={stores?.totalPage} page="page" />
             )}
         </div>
     );

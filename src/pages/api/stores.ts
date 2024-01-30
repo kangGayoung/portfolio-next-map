@@ -20,10 +20,6 @@ export default async function handler(
 
     // totalpage, data, page 객체 넘겨주기
 
-    // const stores = (await import('../../data/store_data.json'))[
-    //     'DATA'
-    // ] as StoreType[];
-
     res.status(200).json({
         page: parseInt(page),
         data: stores,
@@ -32,3 +28,6 @@ export default async function handler(
     });
     // 200 성공
 }
+// const stores = (await import('../../data/store_data.json'))[
+//     'DATA'
+// ] as StoreType[];
