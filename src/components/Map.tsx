@@ -1,11 +1,11 @@
 /*global kakao*/
 import Script from "next/script";
 import * as stores from "@/data/store_data.json";
-import {Dispatch, SetStateAction} from "react";
+import { Dispatch, SetStateAction } from "react";
 
 declare global {
     interface Window {
-        kakao:any;
+        kakao: any;
     }
 }
 
@@ -13,27 +13,35 @@ declare global {
 const DEFAULT_LAT = 37.497625203;
 const DEFAULT_LNG = 127.03088379;
 
-interface MapProps{
+const DEFAULT_ZOOM = 3;
+
+interface MapProps {
     setMap: Dispatch<SetStateAction<any>>;
+    lat?: string | null;
+    lng?: string | null;
+    zoom?: number;
 }
 
-export default function Map({setMap}: MapProps){
+export default function Map({ setMap, lat, lng, zoom }: MapProps) {
     const loadkakaoMap = () => {
         // kakao map 로드
         //kakao.maps.load(function() {
         window.kakao.maps.load(() => {
-            const mapContainer = document.getElementById("map") //div id="map"
+            const mapContainer = document.getElementById("map"); //div id="map"
             const mapOption = {
-                center: new window.kakao.maps.LatLng(DEFAULT_LAT, DEFAULT_LNG),
-                level:3,
-            }
+                center: new window.kakao.maps.LatLng(
+                    lat ?? DEFAULT_LAT, // 위도 값이 있으면 위도값 없으면 디폴트값으로 설정
+                    lng ?? DEFAULT_LNG,
+                ),
+                level: zoom ?? DEFAULT_ZOOM,
+            };
             // var map = new kakao.maps.Map(node, options);
             const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
             setMap(map);
-        })
+        });
     };
-    return(
+    return (
         <>
             {/*지도 API*/}
             <Script

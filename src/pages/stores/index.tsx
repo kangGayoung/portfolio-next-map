@@ -5,6 +5,7 @@ import { StoreApiResponse, StoreType } from "@/interface";
 import { useInfiniteQuery, useQuery } from "react-query";
 
 import axios from "axios";
+
 import Loading from "@/components/Loading";
 import { useRouter } from "next/router";
 import Link from "next/link";
