@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { StoreApiResponse, StoreType } from "@/interface";
 
@@ -7,35 +7,29 @@ import { useInfiniteQuery, useQuery } from "react-query";
 import axios from "axios";
 
 import Loading from "@/components/Loading";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import Pagination from "@/components/Pagination";
 import userIntersectionObserver from "@/hooks/useIntersectionObserver";
 import Loader from "@/components/Loader";
+import SearchFilter from "@/components/SearchFilter";
 
-// export default function StoreListPage({ stores }: { stores: StoreType[] }) {
 export default function StoreListPage() {
-    const router = useRouter(); //페이지네이션
-    const { page = "1" }: any = router.query; //페이지 시작값
     const ref = useRef<HTMLDivElement | null>(null);
     const pageRef = userIntersectionObserver(ref, {});
     const isPageEnd = !!pageRef?.isIntersecting;
-    //console.log(pageRef); // isIntersecting:false로 화면상 보이는지 안보이는지
+    const [q, setQ] = useState<string | null>(null); // 검색어 값
+    const [district, setDistrict] = useState<string | null>(null); //지역구 상태 관리
 
-    // const {
-    //     isLoading,
-    //     isError,
-    //     data: stores, //data: stores 데이터 이름 지정 가능
-    // } = useQuery(`stores-${page}`, async () => {
-    //     const { data } = await axios(`/api/stores?page=${page}`);
-    //     return data as StoreApiResponse;
-    // });
+    // fetchStores 에 넘겨주는 값
+    const searchParams = {
+        q: q,
+        district: district,
+    };
 
     const fetchStores = async ({ pageParam = 1 }) => {
         const { data } = await axios("api/stores?.page=" + pageParam, {
             params: {
                 limit: 10,
                 page: pageParam,
+                ...searchParams,
             },
         });
         return data;
@@ -49,7 +43,7 @@ export default function StoreListPage() {
         hasNextPage,
         isError,
         isLoading,
-    } = useInfiniteQuery("stores", fetchStores, {
+    } = useInfiniteQuery(["stores", searchParams], fetchStores, {
         getNextPageParam: (lastPage: any) =>
             lastPage.data?.length > 0 ? lastPage.page + 1 : undefined,
     });
@@ -84,6 +78,8 @@ export default function StoreListPage() {
 
     return (
         <div className="px-4 md:max-w-4xl mx-auto py-8">
+            {/* search filter - 맛집목록 검색 바 */}
+            <SearchFilter setQ={setQ} setDistrict={setDistrict} />
             <ul role="list" className="divide-y divide-gray-100">
                 {isLoading ? (
                     <Loading />
@@ -117,7 +113,7 @@ export default function StoreListPage() {
                                     </div>
                                     <div className="hidden sm:flex sm:flex-col sm:items-end">
                                         <div className="text-sm font-semibold leading-6 text-gray-900">
-                                            {page?.address}
+                                            {store?.address}
                                         </div>
                                         <div className="mt-1 text-xs truncate font-semibold leading-5 text-gray-500">
                                             {store?.phone || "번호없음"} |{" "}
