@@ -10,18 +10,24 @@ import Loading from "@/components/Loading";
 import userIntersectionObserver from "@/hooks/useIntersectionObserver";
 import Loader from "@/components/Loader";
 import SearchFilter from "@/components/SearchFilter";
+import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
+import { searchState } from "@/atom";
 
 export default function StoreListPage() {
+    const router = useRouter();
     const ref = useRef<HTMLDivElement | null>(null);
     const pageRef = userIntersectionObserver(ref, {});
     const isPageEnd = !!pageRef?.isIntersecting;
-    const [q, setQ] = useState<string | null>(null); // 검색어 값
-    const [district, setDistrict] = useState<string | null>(null); //지역구 상태 관리
+    const searchValue = useRecoilValue(searchState);
+
+    // const [q, setQ] = useState<string | null>(null); // 검색어 값
+    // const [district, setDistrict] = useState<string | null>(null); //지역구 상태 관리
 
     // fetchStores 에 넘겨주는 값
     const searchParams = {
-        q: q,
-        district: district,
+        q: searchValue?.q,
+        district: searchValue?.district,
     };
 
     const fetchStores = async ({ pageParam = 1 }) => {
@@ -79,17 +85,20 @@ export default function StoreListPage() {
     return (
         <div className="px-4 md:max-w-4xl mx-auto py-8">
             {/* search filter - 맛집목록 검색 바 */}
-            <SearchFilter setQ={setQ} setDistrict={setDistrict} />
+            <SearchFilter />
             <ul role="list" className="divide-y divide-gray-100">
                 {isLoading ? (
                     <Loading />
                 ) : (
                     stores?.pages?.map((page, index) => (
                         <React.Fragment key={index}>
-                            {page.data.map((store: StoreType, i: any) => (
+                            {page.data.map((store: StoreType, i: number) => (
                                 <li
-                                    className="flex justify-between gap-x-6 py-5"
+                                    className="flex justify-between gap-x-6 py-5 cursor-pointer hover:bg-gray-50"
                                     key={i}
+                                    onClick={
+                                        () => router.push(`/stores/${store.id}`) //스토어 상세 이동
+                                    }
                                 >
                                     <div className="flex gap-x-4">
                                         <Image

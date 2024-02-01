@@ -1,13 +1,19 @@
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { StoreType } from "@/interface";
+import { currentStoreState, locationState, mapState } from "@/atom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"; //useRecoilValue 읽기전용
 
 interface MarkerProps {
-    map: any;
+    // map: any;
     stores: StoreType[];
-    setCurrentStore: Dispatch<SetStateAction<any>>;
+    //setCurrentStore: Dispatch<SetStateAction<any>>;
 }
 
-export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
+export default function Markers({ stores }: MarkerProps) {
+    const map = useRecoilValue(mapState); // props로 전달하지 않고 전역상태에서 전달
+    const setCurrentStore = useSetRecoilState(currentStoreState);
+    const [location, setLocation] = useRecoilState(locationState);
+
     const loadKakaoMarkers = useCallback(() => {
         if (map) {
             //식당 데이터 마커 띄우기
@@ -81,11 +87,17 @@ export default function Markers({ map, stores, setCurrentStore }: MarkerProps) {
                     "click",
                     function () {
                         setCurrentStore(store);
+                        setLocation({
+                            // 선택한 가게 지도 위치로 이동
+                            ...location,
+                            lat: store.lat,
+                            lng: store.lng,
+                        });
                     },
                 );
             });
         }
-    }, [map, setCurrentStore, stores]);
+    }, [map, stores]);
 
     useEffect(() => {
         loadKakaoMarkers();
