@@ -2,11 +2,18 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { StoreApiResponse, StoreType } from "@/interface";
 import { PrismaClient } from "@prisma/client";
 
+interface Responsetype {
+    page?: string;
+    limit?: string;
+    q?: string;
+    district?: string;
+}
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<StoreApiResponse | StoreType[] | StoreType>,
 ) {
-    const { page = "" }: { page?: string } = req.query;
+    const { page = "", limit = "", q, district }: Responsetype = req.query;
     const prisma = new PrismaClient();
 
     if (page) {
@@ -15,7 +22,12 @@ export default async function handler(
         const stores = await prisma.store.findMany({
             // findMany 모든 레코드 가져오기
             orderBy: { id: "asc" },
-            take: 10,
+            // store 리스트에서 검색된 검색어 가져오기
+            where: {
+                name: q ? { contains: q } : {},
+                address: district ? { contains: district } : {},
+            },
+            take: parseInt(limit),
             skip: skipPage * 10, //쿼리에 맞게 다르게 스킵 페이지를 가져옴
         });
 
