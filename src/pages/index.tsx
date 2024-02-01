@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Map from "@/components/Map";
 import Markers from "@/components/Markers";
 
@@ -8,19 +8,15 @@ import { StoreType } from "@/interface";
 import axios from "axios";
 
 export default function Home({ stores }: { stores: StoreType[] }) {
-    const [map, setMap] = useState(null);
-    const [currentStore, setCurrentStore] = useState(null);
+    //const [map, setMap] = useState(null);
+    //const [currentStore, setCurrentStore] = useState(null);
     //const storeDatas = stores['DATA'];
     return (
         <>
-            <Map setMap={setMap} />
+            <Map />
             {/*Markers 에 stores 데이터 전달*/}
-            <Markers
-                stores={stores}
-                map={map}
-                setCurrentStore={setCurrentStore}
-            />
-            <StoreBox store={currentStore} setStore={setCurrentStore} />
+            <Markers stores={stores} />
+            <StoreBox />
         </>
     );
 }

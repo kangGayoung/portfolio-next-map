@@ -1,14 +1,17 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { StoreType } from "@/interface";
+import { useRecoilValue } from "recoil";
+import { mapState } from "@/atom"; //읽기전용
 
 // store 상세페이지 지도 마커를 만드는 페이지
 
 interface MarkerProps {
-    map: any;
+    //map: any; recoil상태관리
     store: StoreType;
 }
 
-export default function Marker({ map, store }: MarkerProps) {
+export default function Marker({ store }: MarkerProps) {
+    const map = useRecoilValue(mapState); //전역상태관리에서 가져 옴
     const loadKakaoMarker = useCallback(() => {
         if (map && store) {
             // map, store가 있는경우

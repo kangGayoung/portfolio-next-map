@@ -2,6 +2,8 @@
 import Script from "next/script";
 import * as stores from "@/data/store_data.json";
 import { Dispatch, SetStateAction } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { locationState, mapState } from "@/atom";
 
 declare global {
     interface Window {
@@ -10,19 +12,20 @@ declare global {
 }
 
 // 위도, 경도 변수(강남역)
-const DEFAULT_LAT = 37.497625203;
-const DEFAULT_LNG = 127.03088379;
-
-const DEFAULT_ZOOM = 3;
+// const DEFAULT_LAT = 37.497625203;
+// const DEFAULT_LNG = 127.03088379;
+// const DEFAULT_ZOOM = 3;
 
 interface MapProps {
-    setMap: Dispatch<SetStateAction<any>>;
+    // setMap: Dispatch<SetStateAction<any>>; 리코일로 상태관리
     lat?: string | null;
     lng?: string | null;
     zoom?: number;
 }
 
-export default function Map({ setMap, lat, lng, zoom }: MapProps) {
+export default function Map({ lat, lng, zoom }: MapProps) {
+    const setMap = useSetRecoilState(mapState);
+    const location = useRecoilValue(locationState); //lat,lng, zoom
     const loadkakaoMap = () => {
         // kakao map 로드
         //kakao.maps.load(function() {
@@ -30,10 +33,11 @@ export default function Map({ setMap, lat, lng, zoom }: MapProps) {
             const mapContainer = document.getElementById("map"); //div id="map"
             const mapOption = {
                 center: new window.kakao.maps.LatLng(
-                    lat ?? DEFAULT_LAT, // 위도 값이 있으면 위도값 없으면 디폴트값으로 설정
-                    lng ?? DEFAULT_LNG,
+                    // lat ?? DEFAULT_LAT, // 위도 값이 있으면 위도값 없으면 디폴트값으로 설정
+                    lat ?? location.lat,
+                    lng ?? location.lng,
                 ),
-                level: zoom ?? DEFAULT_ZOOM,
+                level: zoom ?? location.zoom,
             };
             // var map = new kakao.maps.Map(node, options);
             const map = new window.kakao.maps.Map(mapContainer, mapOption);
