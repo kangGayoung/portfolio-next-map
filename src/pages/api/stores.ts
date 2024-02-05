@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { StoreApiResponse, StoreType } from "@/interface";
 import { PrismaClient } from "@prisma/client";
 import prisma from "@/db";
+import axios from "axios";
 
 interface Responsetype {
     page?: string;
@@ -19,9 +20,26 @@ export default async function handler(
 
     if (req.method === "POST") {
         // 데이터 생성을 처리한다
-        const data = req.body;
+        const formData = req.body;
+        const headers = {
+            Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
+        };
+
+        // 카카오에서 주소 검색 가져오기
+        const { data } = await axios.get(
+            `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURI(formData.address)}`,
+            { headers }, //axios 요청시 헤더값 추가 요청
+        );
+
+        //console.log("@@data", data, data.documents[0].y, data.documents[0].x);
+
+        //위도 경도 값 넣어주기
         const result = await prisma.store.create({
-            data: { ...data },
+            data: {
+                ...formData,
+                lat: data.documents[0].y,
+                lng: data.documents[0].x,
+            },
         });
 
         return res.status(200).json(result);
