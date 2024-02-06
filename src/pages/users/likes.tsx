@@ -48,13 +48,11 @@ export default function LikesPage() {
                 )}
             </ul>
             {/* totalPage가 있고 0보다 클때 */}
-            {likes?.totalPage && likes.totalPage > 0 && (
-                <Pagination
-                    total={likes?.totalPage}
-                    page={page}
-                    pathname="/users/likes"
-                />
-            )}
+            <Pagination
+                total={likes?.totalPage}
+                page={page}
+                pathname="/users/likes"
+            />
         </div>
     );
 }

@@ -1,7 +1,33 @@
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { CommentApiResponse } from "@/interface";
+import { useQuery } from "react-query";
+import CommentList from "@/components/comments/CommentList";
+import Pagination from "@/components/Pagination";
 
 export default function MyPage() {
     const { data: session } = useSession();
+
+    const router = useRouter();
+    const { page = "1" }: any = router.query;
+
+    const fetchComments = async () => {
+        const { data } = await axios(
+            //&user=true 로그인된 사용자 정보만 가져오기
+            `/api/comments?&limit=5&page=${page}&user=${true}`,
+        );
+
+        return data as CommentApiResponse;
+    };
+
+    //refetch 댓글 등록 후 댓글 바로 업데이트
+    const { data: comments, refetch } = useQuery(
+        //-${page} :코멘트 페이지 변경될 때마다 캐싱처리
+        `comments-${page}`,
+        fetchComments,
+    );
+
     return (
         <div className="md:max-w-5xl mx-auto px-4 py-8">
             <div className="px-4 sm:px-0">
@@ -39,7 +65,7 @@ export default function MyPage() {
                                 alt="프로필 이미지"
                                 width={48}
                                 height={48}
-                                className="rounded-full"
+                                className="rounded-full w-12 h-12"
                                 src={
                                     session?.user.image ||
                                     "/images/markers/default.png"
@@ -63,6 +89,21 @@ export default function MyPage() {
                     </div>
                 </dl>
             </div>
+            <div className="mt-10 px-4 sm:px-0">
+                <h3 className="text-base font-semibold leading-7 text-gray-900">
+                    내가 쓴 댓글
+                </h3>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+                    댓글 리스트
+                </p>
+            </div>
+            <CommentList comments={comments} displayStore={true} />
+            {/* pagination */}
+            <Pagination
+                total={comments?.totalPage}
+                page={page}
+                pathname={"/users/mypage"}
+            />
         </div>
     );
 }

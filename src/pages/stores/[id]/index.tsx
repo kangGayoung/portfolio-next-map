@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import Like from "@/components/Like";
+import Comments from "@/components/comments";
 
 export default function StorePage() {
     //const [map, setMap] = useState(null);
@@ -165,10 +166,13 @@ export default function StorePage() {
             </div>
             {/* 성공적으로 가게 데이터를 가져온 경우 */}
             {isSuccess && (
-                <div className="overflow-hidden w-full mb-20 max-w-5xl mx-auto max-h-[600px]">
-                    <Map lat={store?.lat} lng={store?.lng} zoom={1} />
-                    <Marker store={store} />
-                </div>
+                <>
+                    <div className="overflow-hidden w-full mb-20 max-w-5xl mx-auto max-h-[600px]">
+                        <Map lat={store?.lat} lng={store?.lng} zoom={1} />
+                        <Marker store={store} />
+                    </div>
+                    <Comments storeId={store.id} />
+                </>
             )}
         </>
     );
