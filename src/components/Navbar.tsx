@@ -67,31 +67,42 @@ export default function Navbar() {
             {/* mobile navbar */}
             {isOpen && (
                 <div className="navbar_list-mobile">
-                    <Link href="/stores" className="navbar_list-item-mobile">
+                    <Link
+                        href="/stores"
+                        className="navbar_list-item-mobile"
+                        onClick={() => setIsOpen(false)}
+                        // 메뉴 클릭후 네비바 닫힘
+                    >
                         맛집 목록
                     </Link>
                     <Link
                         href="/stores/new"
                         className="navbar_list-item-mobile"
+                        onClick={() => setIsOpen(false)}
                     >
                         맛집 등록
                     </Link>
                     <Link
                         href="/users/likes"
                         className="navbar_list-item-mobile"
+                        onClick={() => setIsOpen(false)}
                     >
                         찜한 가게
                     </Link>
                     <Link
                         href="/users/mypage"
                         className="navbar_list-item-mobile"
+                        onClick={() => setIsOpen(false)}
                     >
                         마이페이지
                     </Link>
                     {status === "authenticated" ? (
                         <button
                             type="button"
-                            onClick={() => signOut()}
+                            onClick={() => {
+                                signOut();
+                                setIsOpen(false);
+                            }}
                             className="navbar_list-item-mobile  text-left"
                         >
                             로그아웃
@@ -100,6 +111,7 @@ export default function Navbar() {
                         <Link
                             href="/api/auth/signin"
                             className="navbar_list-item-mobile"
+                            onClick={() => setIsOpen(false)}
                         >
                             로그인
                         </Link>
