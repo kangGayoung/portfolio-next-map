@@ -5,7 +5,7 @@ const DEFAULT_LAT = "37.497625203";
 const DEFAULT_LNG = "127.03088379";
 const DEFAULT_ZOOM = 3;
 
-export const mapState = atom({
+export const mapState = atom<any>({
     key: "map",
     default: null,
     dangerouslyAllowMutability: true, // 읽기전용의 상태를 수정할수있는 옵션

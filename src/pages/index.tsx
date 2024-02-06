@@ -6,6 +6,7 @@ import StoreBox from "@/components/StoreBox";
 import { StoreType } from "@/interface";
 
 import axios from "axios";
+import CurrentLocationButton from "@/components/CurrentLocationButton";
 
 export default function Home({ stores }: { stores: StoreType[] }) {
     //const [map, setMap] = useState(null);
@@ -17,6 +18,7 @@ export default function Home({ stores }: { stores: StoreType[] }) {
             {/*Markers 에 stores 데이터 전달*/}
             <Markers stores={stores} />
             <StoreBox />
+            <CurrentLocationButton />
         </>
     );
 }
