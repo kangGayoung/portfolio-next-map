@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .navbar {
-   /* display: flex;
+    /* display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
@@ -40,7 +40,7 @@
 }
 
 .navbar_list-item {
-   /* cursor: pointer;*/
+    /* cursor: pointer;*/
     @apply cursor-pointer;
 }
 
@@ -54,8 +54,7 @@
     @apply pt-[52px];
 }
 
-@media only screen and (max-width: 600px){
-
+@media only screen and (max-width: 600px) {
     .navbar_list-mobile {
         /*position: fixed;
         width: 100%;
@@ -83,7 +82,7 @@
 
     .navbar_list-item-mobile:hover {
         /*color: darkgray;*/
-        @apply text-gray-600;
+        @apply text-blue-950;
     }
 
     .navbar_list-mobile {
