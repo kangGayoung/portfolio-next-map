@@ -1,19 +1,17 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import { Adapter } from "next-auth/adapters";
+import prisma from "@/db";
+
 import GoogleProvider from "next-auth/providers/google";
 import NaverProvider from "next-auth/providers/naver";
 import KakaoProvider from "next-auth/providers/kakao";
-import prisma from "@/db";
-
-// const prisma = new PrismaClient();
+import { Adapter } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
     session: {
-        strategy: "jwt" as const, // jwt 기반의 세션을 사용한다
-        maxAge: 60 * 60 * 24, // 최대 수명 설정, 초단위로 표시
-        updateAge: 60 * 60 * 2, //세션 업데이트 주기
+        strategy: "jwt" as const,
+        maxAge: 60 * 60 * 24,
+        updateAge: 60 * 60 * 2,
     },
     adapter: PrismaAdapter(prisma) as Adapter,
     // Configure one or more authentication providers
@@ -33,7 +31,22 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     pages: {
-        signIn: "/users/login", //로그인 콜백
+        signIn: "/users/login",
+    },
+    callbacks: {
+        session: ({ session, token }) => ({
+            ...session,
+            user: {
+                ...session.user,
+                id: token.sub,
+            },
+        }),
+        jwt: async ({ user, token }) => {
+            if (user) {
+                token.sub = user.id;
+            }
+            return token;
+        },
     },
 };
 
