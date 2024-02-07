@@ -1,15 +1,19 @@
-import { LikeApiResponse, LikeInterface, StoreType } from "@/interface";
-import axios from "axios";
-import { useQuery } from "react-query";
-import React from "react";
+"use client";
+
 import Loading from "@/components/Loading";
 import StoreList from "@/components/StoreListElement";
-import { useRouter } from "next/router";
+import { LikeApiResponse, LikeInterface } from "@/interface";
+import axios from "axios";
+import { useQuery } from "react-query";
 import Pagination from "@/components/Pagination";
 
-export default function LikesPage() {
-    const router = useRouter();
-    const { page = "1" }: any = router.query; // 라우터 쿼리에서 페이지값 가져옴
+export default function LikesPage({
+    searchParams,
+}: {
+    searchParams: { page: string };
+}) {
+    const page = searchParams?.page || "1";
+    //const { page = "1" }: any = router.query; // 라우터 쿼리에서 페이지값 가져옴
 
     const fetchLikes = async () => {
         const { data } = await axios(`/api/likes?limit=10&page=${page}`);
@@ -20,6 +24,7 @@ export default function LikesPage() {
         data: likes,
         isError,
         isLoading,
+        isSuccess,
     } = useQuery(`likes-${page}`, fetchLikes);
     //`likes-${page}` => 페이지 바뀔 때마다 쿼리 키도 바뀌게 해야 업데이트 속도 빨라짐
     // 각각 쿼리가 캐시이 되지 않도록
@@ -45,6 +50,11 @@ export default function LikesPage() {
                     likes?.data.map((like: LikeInterface, index) => (
                         <StoreList store={like.store} i={index} key={index} />
                     ))
+                )}
+                {isSuccess && !!!likes?.data.length && (
+                    <div className="p-4 border border-gray-200 rounded-md text-sm text-gray-400">
+                        찜한 가게가 없습니다.
+                    </div>
                 )}
             </ul>
             {/* totalPage가 있고 0보다 클때 */}

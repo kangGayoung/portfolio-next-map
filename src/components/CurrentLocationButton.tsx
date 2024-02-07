@@ -1,5 +1,6 @@
+"use client";
+
 import { MdOutlineMyLocation } from "react-icons/md";
-import { useFormState } from "react-hook-form";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { mapState } from "@/atom";

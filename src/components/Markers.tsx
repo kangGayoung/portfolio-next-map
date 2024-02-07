@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+"use client";
+
+import { useCallback, useEffect } from "react";
 import { StoreType } from "@/interface";
 import { currentStoreState, locationState, mapState } from "@/atom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"; //useRecoilValue 읽기전용

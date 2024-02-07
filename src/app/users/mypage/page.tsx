@@ -1,16 +1,22 @@
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { CommentApiResponse } from "@/interface";
-import { useQuery } from "react-query";
-import CommentList from "@/components/comments/CommentList";
-import Pagination from "@/components/Pagination";
+"use client";
 
-export default function MyPage() {
+import Pagination from "@/components/Pagination";
+import CommentList from "@/components/comments/CommentList";
+import { CommentApiResponse } from "@/interface";
+import axios from "axios";
+import { useSession, signOut } from "next-auth/react";
+import { useQuery } from "react-query";
+
+export default function Page({
+    searchParams,
+}: {
+    searchParams: { page: string };
+}) {
     const { data: session } = useSession();
 
-    const router = useRouter();
-    const { page = "1" }: any = router.query;
+    //const router = useRouter();
+    //const { page = "1" }: any = router.query;
+    const page = searchParams?.page || "1";
 
     const fetchComments = async () => {
         const { data } = await axios(
@@ -102,7 +108,7 @@ export default function MyPage() {
             <Pagination
                 total={comments?.totalPage}
                 page={page}
-                pathname={"/users/mypage"}
+                pathname="/users/mypage"
             />
         </div>
     );

@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { StoreType } from "@/interface";
@@ -12,10 +14,10 @@ import { toast } from "react-toastify";
 import Like from "@/components/Like";
 import Comments from "@/components/comments";
 
-export default function StorePage() {
+export default function StorePage({ params }: { params: { id: string } }) {
     //const [map, setMap] = useState(null);
     const router = useRouter();
-    const { id } = router.query;
+    const id = params.id;
     //사용자 로그인 했을때만 접근가능
     const { status } = useSession();
 
