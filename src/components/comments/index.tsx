@@ -8,15 +8,11 @@ import Pagination from "@/components/Pagination";
 
 interface CommentProps {
     storeId: number;
-    params?: {
-        page?: string;
-    };
+    page: string;
 }
 
-export default function Comments({ storeId, params }: CommentProps) {
+export default function Comments({ storeId, page = "1" }: CommentProps) {
     const { status } = useSession();
-    const page = params?.page || "1";
-    //const { page = "1" }: any = router.query;
 
     const fetchComments = async () => {
         const { data } = await axios(

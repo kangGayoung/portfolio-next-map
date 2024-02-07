@@ -14,7 +14,11 @@ import { toast } from "react-toastify";
 import Like from "@/components/Like";
 import Comments from "@/components/comments";
 
-export default function StorePage({ params }: { params: { id: string } }) {
+interface ParamsProps {
+    params: { id: string };
+    searchParams: { page: string };
+}
+export default function StorePage({ params, searchParams }: ParamsProps) {
     //const [map, setMap] = useState(null);
     const router = useRouter();
     const id = params.id;
@@ -173,7 +177,7 @@ export default function StorePage({ params }: { params: { id: string } }) {
                         <Map lat={store?.lat} lng={store?.lng} zoom={1} />
                         <Marker store={store} />
                     </div>
-                    <Comments storeId={store.id} />
+                    <Comments storeId={store.id} page={searchParams.page} />
                 </>
             )}
         </>
