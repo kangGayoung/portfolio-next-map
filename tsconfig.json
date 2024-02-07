@@ -27,6 +27,7 @@
       }
     ]
   },
+  "types": ["@types/gtag.js"],
   "include": [
     "next-env.d.ts",
     "types/**/*.ts",
